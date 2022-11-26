@@ -1,1 +1,47 @@
+#Télécharger les données sur https://github.com/bnosac/BelgiumMaps.StatBel (je ne pense pas que le code marchera si vous ne le faites pas)
+#------------------------------------------------------------------------------
 
+
+library(sp)
+library(sf)
+library(rgdal)
+library(ggplot2)
+library(sf)
+library(tmap)
+library(leaflet)
+
+
+#------------------------------------------------------------------------------
+#Fabrication de la carte de Belgique
+
+data('BE_ADMIN_BELGIUM')
+belgique <- st_as_sf(BE_ADMIN_BELGIUM)
+data("BE_ADMIN_PROVINCE")               #Ajoute province (1)
+provinces <- st_as_sf(BE_ADMIN_PROVINCE) # convertion st à sf (pour utilisation de tmap)
+data("BE_ADMIN_MUNTY")                   #Pour les communes (2)
+munip <- st_as_sf(BE_ADMIN_MUNTY)
+mapv1 <- qtm(provinces) +               #addition de 1 et 2/ pt que 1 pas nécessaire?
+  qtm(munip)
+
+mapv1                                  #pour voir à quoi ressemble la carte normalement
+
+
+#---------------------------------------------------------------------------
+#Cours d'eau
+
+
+
+
+
+
+
+
+#-------------------------------------------------------------------------------
+
+#mapv2 <- tmap_leaflet(mapv1)%>%
+#addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") %>%
+ # addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+  #addLayersControl(baseGroups = c("World Imagery", "Toner Lite"))%>%
+  #addMiniMap(position = "bottomright", width = 150, height = 150, zoomAnimation = TRUE)
+
+#mapv2                #pour la mettre sous forme intéractive
