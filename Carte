@@ -6,7 +6,7 @@ library(sp)
 library(sf)
 library(rgdal)
 library(ggplot2)
-library(sf)
+library(st)
 library(tmap)
 library(leaflet)
 
@@ -20,28 +20,30 @@ data("BE_ADMIN_PROVINCE")               #Ajoute province (1)
 provinces <- st_as_sf(BE_ADMIN_PROVINCE) # convertion st à sf (pour utilisation de tmap)
 data("BE_ADMIN_MUNTY")                   #Pour les communes (2)
 munip <- st_as_sf(BE_ADMIN_MUNTY)
-mapv1 <- qtm(provinces) +               #addition de 1 et 2/ pt que 1 pas nécessaire?
-  qtm(munip)
-
-mapv1                                  #pour voir à quoi ressemble la carte normalement
 
 
-#---------------------------------------------------------------------------
+
+
+#------------------------------------------------------------------------------
 #Cours d'eau
 
 
+data("BE_OSM_WATERWAYS")
 
-
-
-
-
+waterways <- st_as_sf(BE_OSM_WATERWAYS) #(3)
 
 #-------------------------------------------------------------------------------
+#map avec cours d'eau
 
-#mapv2 <- tmap_leaflet(mapv1)%>%
+mapv1 <- qtm(provinces) +qtm(munip) + qtm(waterways, lines.col = "#006699")  #addition de 1,2,3
+
+mapv1                                  #pour voir à quoi ressemble la carte normalement
+#-------------------------------------------------------------------------------
+
+#map2 <- tmap_leaflet(mapv1)%>%
 #addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") %>%
- # addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
-  #addLayersControl(baseGroups = c("World Imagery", "Toner Lite"))%>%
-  #addMiniMap(position = "bottomright", width = 150, height = 150, zoomAnimation = TRUE)
+ #addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
+ #addLayersControl(baseGroups = c("World Imagery", "Toner Lite"))%>%
+ #addMiniMap(position = "bottomright", width = 150, height = 150, zoomAnimation = TRUE)
 
-#mapv2                #pour la mettre sous forme intéractive
+#map2                #pour la mettre sous forme intéractive
