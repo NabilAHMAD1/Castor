@@ -38,7 +38,7 @@ waterways <- st_as_sf(BE_OSM_WATERWAYS) #(3)
 #-------------------------------------------------------------------------------
 #map avec cours d'eau
 
-mapv1 <- qtm(provinces) +qtm(munip) + qtm(waterways, lines.col = "#006699")  #addition de 1,2,3
+mapv1 <- qtm(provinces) +qtm(munip,fill = "#FFFFFF") + qtm(waterways, lines.col = "#006699")  #addition de 1,2,3
 
 mapv1                                  #pour voir à quoi ressemble la carte normalement
 #-------------------------------------------------------------------------------
