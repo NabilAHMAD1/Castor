@@ -1,7 +1,7 @@
 #Télécharger les données sur https://github.com/bnosac/BelgiumMaps.StatBel (je ne pense pas que le code marchera si vous ne le faites pas) + télécharger dossier waterways
 #télécharger les différents packages
-#si vous n'arrivez pas à exécuter le code, juste prendre fichier mapv2 que j'ai créé et l'appelé dans le script (en écrivant simplement mapv2)
-install.packages(c("sp","sf","rgdal","ggplot2","st","tmap","leaflet))
+#si vous n'arrivez pas à exécuter le code, juste prendre fichier mapv2 que j'ai créé et l'appeler dans le script (en écrivant simplement mapv2)
+install.packages(c("sp","sf","rgdal","ggplot2","st","tmap","leaflet"))
 
 #------------------------------------------------------------------------------
 
