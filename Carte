@@ -3,8 +3,6 @@
 #si vous n'arrivez pas à exécuter le code, juste prendre fichier mapv2 que j'ai créé et l'appeler dans le script (en écrivant simplement mapv2)
 install.packages(c("sp","sf","rgdal","ggplot2","st","tmap","leaflet"))
 
-#------------------------------------------------------------------------------
-
 
 library(sp)
 library(sf)
@@ -13,44 +11,6 @@ library(ggplot2)
 library(st)
 library(tmap)
 library(leaflet)
-
-
-#------------------------------------------------------------------------------
-#Fabrication de la carte de Belgique
-
-data('BE_ADMIN_BELGIUM')
-belgique <- st_as_sf(BE_ADMIN_BELGIUM)
-data("BE_ADMIN_PROVINCE")               #Ajoute province (1)
-provinces <- st_as_sf(BE_ADMIN_PROVINCE) # convertion st à sf (pour utilisation de tmap)
-data("BE_ADMIN_MUNTY")                   #Pour les communes (2)
-munip <- st_as_sf(BE_ADMIN_MUNTY)
-
-
-
-
-#------------------------------------------------------------------------------
-#Cours d'eau
-
-
-data("BE_OSM_WATERWAYS")
-
-waterways <- st_as_sf(BE_OSM_WATERWAYS) #(3)
-
-#-------------------------------------------------------------------------------
-#map avec cours d'eau
-
-mapv1 <- qtm(provinces) +qtm(munip,fill = "#FFFFFF") + qtm(waterways, lines.col = "#006699")  #addition de 1,2,3
-
-mapv1                                  #pour voir à quoi ressemble la carte normalement
-#-------------------------------------------------------------------------------
-library(sp)
-library(sf)
-library(rgdal)
-library(ggplot2)
-library(st)
-library(tmap)
-library(leaflet)
-library(raster)
 #------------------------------------------------------------------------------
 #Fabrication de la carte de Belgique
 
