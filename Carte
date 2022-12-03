@@ -43,11 +43,70 @@ mapv1 <- qtm(provinces) +qtm(munip,fill = "#FFFFFF") + qtm(waterways, lines.col 
 
 mapv1                                  #pour voir à quoi ressemble la carte normalement
 #-------------------------------------------------------------------------------
+library(sp)
+library(sf)
+library(rgdal)
+library(ggplot2)
+library(st)
+library(tmap)
+library(leaflet)
+library(raster)
+#------------------------------------------------------------------------------
+#Fabrication de la carte de Belgique
 
-#map2 <- tmap_leaflet(mapv1)%>%
-#addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") %>%
- #addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
- #addLayersControl(baseGroups = c("World Imagery", "Toner Lite"))%>%
- #addMiniMap(position = "bottomright", width = 150, height = 150, zoomAnimation = TRUE)
+data('BE_ADMIN_BELGIUM')
+belgique <- st_as_sf(BE_ADMIN_BELGIUM)
+data("BE_ADMIN_PROVINCE")               #Ajoute province (1)
+provinces <- st_as_sf(BE_ADMIN_PROVINCE) # convertion st à sf (pour utilisation de tmap)
+data("BE_ADMIN_MUNTY")                   #Pour les communes (2)
+communes <- st_as_sf(BE_ADMIN_MUNTY)
 
-#map2                #pour la mettre sous forme intéractive
+#------------------------------------------------------------------------------
+#Cours d'eau
+data("BE_OSM_WATERWAYS")
+waterways <- st_as_sf(BE_OSM_WATERWAYS) #(3)
+
+#-------------------------------------------------------------------------------
+#map avec cours d'eau
+
+mapv1 <- qtm(provinces) +qtm(communes, fill = "#FFFFFF") + qtm(waterways, lines.col = "#006699")  #addition de 1,2,3
+
+#mapv1
+                      #pour voir à quoi ressemble la carte normalement
+#-------------------------------------------------------------------------------
+
+#à définir selon le chemin d'accès qui mène au fichier
+setwd("C:/Users/nabil/OneDrive/Bureau/Projet/")
+cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv") #anciennes coordonnées pour afficher points sur carte
+#print(cordinates)
+
+
+#possibilité d'ajouter d'autres infos dans le fichier csv
+ID <- readline("Qui êtes vous ? ") 
+Latitude <- as.numeric(readline("Veuillez introduire la latitude des coordonnées GPS : "))
+Longitude <- as.numeric(readline("Veuillez introduire la longitude des coordonnées GPS : "))
+Couleur <- readline("Couleur pour le point souhaité (en anglais) : ")  #à voir comment changer les couleurs des points
+
+
+data <- data.frame(ID,Latitude,Longitude,Couleur)
+
+write.table(data,
+            "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv",
+            append = TRUE,
+            quote = FALSE,
+            sep = ",",
+            row.names = FALSE,
+            col.names = FALSE)
+
+
+newcordinates <- read.csv(file = 'C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv') #actualise fichier 
+#print(newcordinates)
+
+
+map2 <- tmap_leaflet(mapv1)%>% #implémentation sous forme intéractive
+  addMiniMap(position = "bottomright",
+             width = 150,
+             height = 150,
+             zoomAnimation = TRUE)%>% #mini map, nécessaire?
+  addMarkers(lng = newcordinates$Longitude, lat = newcordinates$Latitude) #ajoute les différents points du fichier
+map2
