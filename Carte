@@ -40,7 +40,7 @@ setwd("C:/Users/nabil/OneDrive/Bureau/Projet/")
 cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv") #anciennes coordonnées pour afficher points sur carte;#à définir selon le chemin d'accès qui mène au fichier
 #print(cordinates)
 
-map1 <- tmap_leaflet(map1)%>% #implémentation sous forme intéractive
+map1 <- tmap_leaflet(mapv1)%>% #implémentation sous forme intéractive
   addMiniMap(position = "bottomright",
              width = 150,
              height = 150,
