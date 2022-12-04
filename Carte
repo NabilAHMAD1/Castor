@@ -37,7 +37,7 @@ mapv1 <- qtm(provinces) +qtm(communes, fill = "#FFFFFF") + qtm(waterways, lines.
 
 #à définir selon le chemin d'accès qui mène au fichier
 setwd("C:/Users/nabil/OneDrive/Bureau/Projet/")
-cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv") #anciennes coordonnées pour afficher points sur carte
+cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv") #anciennes coordonnées pour afficher points sur carte;#à définir selon le chemin d'accès qui mène au fichier
 #print(cordinates)
 
 
@@ -51,7 +51,7 @@ Couleur <- readline("Couleur pour le point souhaité (en anglais) : ")  #à voir
 data <- data.frame(ID,Latitude,Longitude,Couleur)
 
 write.table(data,
-            "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv",
+            "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv", ##à définir selon le chemin d'accès qui mène au fichier
             append = TRUE,
             quote = FALSE,
             sep = ",",
@@ -59,7 +59,7 @@ write.table(data,
             col.names = FALSE)
 
 
-newcordinates <- read.csv(file = 'C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv') #actualise fichier 
+newcordinates <- read.csv(file = 'C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv') #actualise fichier ; #à définir selon le chemin d'accès qui mène au fichier
 #print(newcordinates)
 
 
