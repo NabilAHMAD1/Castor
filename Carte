@@ -45,7 +45,7 @@ map1 <- tmap_leaflet(map1)%>% #implémentation sous forme intéractive
              width = 150,
              height = 150,
              zoomAnimation = TRUE)%>% #mini map, nécessaire?
-  addMarkers(lng = newcordinates$Longitude, lat = newcordinates$Latitude, label = newcordinates$Comments) #ajoute les différents points du fichier
+  addMarkers(lng = cordinates$Longitude, lat = cordinates$Latitude, label = cordinates$Comments) #ajoute les différents points du fichier
 map1
 
 
