@@ -71,7 +71,7 @@ write.table(data,
 newcordinates <- read.csv(file = 'C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv') #actualise fichier ; #à définir selon le chemin d'accès qui mène au fichier
 #print(newcordinates)
 
-
+#actualise la carte
 map2 <- tmap_leaflet(mapv1)%>% #implémentation sous forme intéractive
   addMiniMap(position = "bottomright",
              width = 150,
