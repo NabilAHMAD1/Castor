@@ -40,9 +40,6 @@ mapv1 <- qtm(provinces) +qtm(communes, fill = "#FFFFFF") + qtm(waterways, lines.
                       #pour voir à quoi ressemble la carte normalement
 #-------------------------------------------------------------------------------
 
-
-
-#--------------------------------------------------- (Partie vraiment nécessaire ou passer directement à l'autre bout?)
 #à définir selon le chemin d'accès qui mène au fichier
 setwd("C:/Users/nabil/OneDrive/Bureau/Projet/")
 cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv") #anciennes coordonnées pour afficher points sur carte
@@ -50,36 +47,32 @@ cordinates <- read.csv(file = "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée
 df1 <- data.frame(col = cordinates$Couleur)
 #print(df1)
 
-
-#couleur des points
 icons_list <- icons(iconUrl = ifelse(df1$col == "Rouge", 
                                      'https://www.clker.com/cliparts/z/G/t/d/x/o/google-maps-marker-for-residencelamontagne-md.png',
                                      ifelse(df1$col == "Orange", "http://www.clker.com/cliparts/U/9/x/u/V/b/orange-marker-black-border-md.png", 
                                             ifelse(df1$col == "Vert","http://www.clker.com/cliparts/F/w/l/C/e/W/map-marker-md.png",NA))),
                     iconWidth = cordinates$Width, iconHeight = cordinates$Heigth)
-                    
-                    
 map1 <- tmap_leaflet(mapv1)%>% #implémentation sous forme intéractive
   addMiniMap(position = "bottomright",
              width = 150,
              height = 150,
              zoomAnimation = TRUE)%>% #mini map, nécessaire?
-  addMarkers(lng = cordinates$Longitude, lat = cordinates$Latitude,  icon = icons_list) #ajoute les différents points du fichier
+  addMarkers(lng = cordinates$Longitude, lat = cordinates$Latitude, label = cordinates$Comments, icon = icons_list) #ajoute les différents points du fichier
 map1
-#------------------------------------------------------------------------------------------------
+
 
 #possibilité d'ajouter d'autres infos dans le fichier csv
 ID <- readline("Qui êtes vous ? ") 
 Latitude <- as.numeric(readline("Veuillez introduire la latitude des coordonnées GPS : "))
 Longitude <- as.numeric(readline("Veuillez introduire la longitude des coordonnées GPS : "))
 Couleur <- readline("Couleur pour le point souhaité (1er lettre en majuscule) : ")  #à voir comment changer les couleurs des points
-Date <- readline("Date dee la découverte : ")
 Comments <- readline("Ajouter un commentaire : ")
+Date <- readline("Date de la découverte : ")
 Heigth <- 20
-Width <- 20 #taille du points
+Width <- 20
 
 
-data <- data.frame(ID,Latitude,Longitude,Couleur,Heigth,Width,Date)
+data <- data.frame(ID,Latitude,Longitude,Couleur,Heigth,Width,Date,Comments)
 
 write.table(data,
             "C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv",
@@ -91,7 +84,7 @@ write.table(data,
 
 
 newcordinates <- read.csv(file = 'C:/Users/nabil/OneDrive/Bureau/Projet/coordonnée.csv') #actualise fichier 
-#print(newcordinates)
+print(newcordinates)
 
 
 #mapv2
@@ -111,5 +104,5 @@ map2 <- tmap_leaflet(mapv1)%>% #implémentation sous forme intéractive
              width = 150,
              height = 150,
              zoomAnimation = TRUE)%>% #mini map, nécessaire?
-  addMarkers(lng = newcordinates$Longitude, lat =newcordinates$Latitude, icon = icons_list) #ajoute les différents points du fichier
+  addMarkers(lng = newcordinates$Longitude, lat =newcordinates$Latitude, icon = icons_list,label = newcordinates$Date, popup = newcordinates$Comments,popupOptions = "") #ajoute les différents points du fichier
 map2
