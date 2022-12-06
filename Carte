@@ -73,6 +73,7 @@ ID <- readline("Qui êtes vous ? ")
 Latitude <- as.numeric(readline("Veuillez introduire la latitude des coordonnées GPS : "))
 Longitude <- as.numeric(readline("Veuillez introduire la longitude des coordonnées GPS : "))
 Couleur <- readline("Couleur pour le point souhaité (1er lettre en majuscule) : ")  #à voir comment changer les couleurs des points
+Date <- readline("Date dee la découverte : ")
 Comments <- readline("Ajouter un commentaire : ")
 Heigth <- 20
 Width <- 20 #taille du points
