@@ -13,12 +13,10 @@ show_map <- function(belgique, cordinates, icons_list){
 server <- function(input, output, session) {
     #------------------------------------------------------------------------------
     # Make the map of Belgium
-    data('BE_ADMIN_BELGIUM')
-    belgique <- st_as_sf(BE_ADMIN_BELGIUM)
-    data("BE_ADMIN_PROVINCE")
-    provinces <- st_as_sf(BE_ADMIN_PROVINCE) 
-    data("BE_ADMIN_MUNTY")
-    communes <- st_as_sf(BE_ADMIN_MUNTY)
+    belgique1 <- gadm(country='BEL', level=1, path = tempdir())
+    provinces1 <- gadm(country='BEL', level=2, path = tempdir())
+    communes1 <- gadm(country='BEL', level=4, path = tempdir())
+    belgique <- st_as_sf(belgique1)
     # Rivers
     #data("BE_OSM_WATERWAYS")
     #waterways <- st_as_sf(BE_OSM_WATERWAYS)
