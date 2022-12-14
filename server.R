@@ -27,8 +27,8 @@ server <- function(input, output, session) {
             leaflet() %>%
                 addTiles() %>%
                 addPolygons(data = belgique, color = "black", weight = 1, fillOpacity = 0.2) #%>%
-                #addPolygons(data = provinces, color = "black", weight = 1, fillOpacity = 0.2) %>%
-                #addPolygons(data = communes, color = "black", weight = 1, fillOpacity = 0.2) %>%
+                #addPolygons(data = provinces1, color = "black", weight = 1, fillOpacity = 0.2) %>%
+                #addPolygons(data = communes1, color = "black", weight = 1, fillOpacity = 0.2) %>%
                 #addPolygons(data = waterways, color = "blue", weight = 1, fillOpacity = 0.2)
     })
 
