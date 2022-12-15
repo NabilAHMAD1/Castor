@@ -1,0 +1,164 @@
+#j'ai fait quelques petites modifs par rapport à l'autre
+install.packages("bslib")
+library(bslib)
+library(shiny)
+# install all packages needed
+#install.packages(c("sp","sf","tmap","leaflet"))
+remotes::install_github("bnosac/BelgiumMaps.StatBel")
+# Load all packages
+library(BelgiumMaps.StatBel)
+library(sp)
+library(sf)
+library(tmap)
+library(leaflet)
+
+ui <- fluidPage(theme = bs_theme(version = 5, bootswatch = "pulse"),
+                navbarPage("Castor", id = "navbar", theme = bs_theme(version = 5, bootswatch = "pulse"),
+                           # Main page
+                           tabPanel("Home", value = "home",
+                                    fluidRow(
+                                      column(2, h2("Home")),
+                                      column(10, h2("Welcome to the Castor app"))
+                                    )
+                           ),
+                           # Map page
+                           tabPanel("Map", icon = icon("map"), value = "map",
+                                    fluidRow(
+                                      column(2, 
+                                             h2("Map of Belgium"),
+                                             selectInput("color", "Color filter", choices = c("Red", "Orange", "Green", "All"), selected = "All"),
+                                             checkboxInput("legend", "Show legend", value = TRUE),
+                                             textInput("name", "Name"),
+                                             fluidRow(
+                                               column(6, numericInput("lat", "Latitude", value = 50.5, min = 49,5 , max = 51,55)),
+                                               column(6, numericInput("lng", "Longitude", value = 4.5, min = 2.55, max = 6.5)),
+                                             ),
+                                             fileInput("img", "Image", accept = "image/"),
+                                             selectInput("Couleur", "Couleur", choices = c("Red", "Orange", "Green"), selected = "Red"),
+                                             textInput("comments", "Comments"),
+                                             dateInput("date", "Date"),
+                                             actionButton("add", "Add marker")
+                                      ),
+            
+                                                                column(10, leafletOutput("map", height = "100vh", width = "100%"))
+                                    )
+                           ),
+                           # About page
+                           tabPanel("About", icon = icon("info"), value = "about",
+                                    h2("About"),
+                                    h3("This app was made by:")
+                           )
+                )
+)
+
+
+
+# Create a function to show the map
+show_map <- function(belgique, cordinates, icons_list){
+  cordinates <- read.csv("coordonnée.csv")
+  renderLeaflet({
+    leaflet() %>%
+      addTiles() %>%
+      addPolygons(data = belgique, color = "black", weight = 1, fillOpacity = 0.2) %>%
+      addMarkers(lng = cordinates$Longitude, lat =cordinates$Latitude, icon = icons_list,label = cordinates$Date, popup = cordinates$Comments,popupOptions = "") 
+  })
+}
+
+# Create the server
+server <- function(input, output, session) {
+  #------------------------------------------------------------------------------
+  # Make the map of Belgium
+  data('BE_ADMIN_BELGIUM')
+  belgique <- st_as_sf(BE_ADMIN_BELGIUM)
+  data("BE_ADMIN_PROVINCE")
+  provinces <- st_as_sf(BE_ADMIN_PROVINCE) 
+  data("BE_ADMIN_MUNTY")
+  communes <- st_as_sf(BE_ADMIN_MUNTY)
+  # Rivers
+  #data("BE_OSM_WATERWAYS")
+  #waterways <- st_as_sf(BE_OSM_WATERWAYS)
+  
+  #-------------------------------------------------------------------------------
+  # Show the map
+  output$map <- renderLeaflet({
+    leaflet() %>%
+      addTiles() %>%
+      addPolygons(data = belgique, color = "black", weight = 1, fillOpacity = 0.2) #%>%
+    #addPolygons(data = provinces, color = "black", weight = 1, fillOpacity = 0.2) %>%
+    #addPolygons(data = communes, color = "black", weight = 1, fillOpacity = 0.2) %>%
+    #addPolygons(data = waterways, color = "blue", weight = 1, fillOpacity = 0.2)
+  })
+  
+  #-------------------------------------------------------------------------------
+  # Get input from the user
+  # Show specific markers
+  observe({
+    proxy <- leafletProxy("map")
+    color <- input$color
+    cordinates <- read.csv("coordonnée.csv")
+    # take only the points with the color selected by the user
+    if (color != "All")
+      cordinates <- cordinates[cordinates$Couleur == color,]
+    # Make a data frame with the color of the points
+    df1 <- data.frame(col = cordinates$Couleur)
+    # Make a list of the icons
+    icons_list <- icons(iconUrl = ifelse(df1$col == "Red",'https://www.clker.com/cliparts/z/G/t/d/x/o/google-maps-marker-for-residencelamontagne-md.png',
+                                         ifelse(df1$col == "Orange", "http://www.clker.com/cliparts/U/9/x/u/V/b/orange-marker-black-border-md.png", 
+                                                ifelse(df1$col == "Green","http://www.clker.com/cliparts/F/w/l/C/e/W/map-marker-md.png",NA))),
+                        iconWidth = cordinates$Width, iconHeight = cordinates$Heigth)
+    # clear the markers add the new
+    proxy %>% clearMarkers() %>% addMarkers(lng = cordinates$Longitude, lat =cordinates$Latitude, icon = icons_list,label = cordinates$Date, popup = cordinates$Comments,popupOptions = "")
+  })
+  # Show legend
+  observe({
+    proxy <- leafletProxy("map")
+    if (input$legend) {
+      proxy %>% addLegend(position = "bottomright", colors = c("red", "orange", "green"), labels = c("Rouge", "Orange", "Vert"))
+    } else {
+      proxy %>% clearControls()
+    }
+  })
+  # Add Markers
+  observeEvent(input$add, {
+    ID <- input$name
+    Latitude <- input$lat
+    Longitude <- input$lng
+    Couleur <- input$Couleur
+    Comments <- input$comments
+    Date <- input$date
+    Heigth <- 30
+    Width <- 20
+    data <- data.frame(ID,Latitude,Longitude,Couleur,Heigth,Width,Date,Comments)
+    
+    write.table(data,
+                "coordonnée.csv",
+                append = TRUE,
+                quote = FALSE,
+                sep = ",",
+                row.names = FALSE,
+                col.names = FALSE)
+  })
+  
+  observeEvent(input$map_click, {
+    ID <- input$name
+    Latitude <- input$map_click$lat
+    Longitude <- input$map_click$lng
+    Couleur <- input$Couleur
+    Comments <- input$comments
+    Date <- input$date
+    Heigth <- 30
+    Width <- 20
+    data <- data.frame(ID,Latitude,Longitude,Couleur,Heigth,Width,Date,Comments)
+    
+    write.table(data,
+                "coordonnée.csv",
+                append = TRUE,
+                quote = FALSE,
+                sep = ",",
+                row.names = FALSE,
+                col.names = FALSE)
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
